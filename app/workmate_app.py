@@ -35,10 +35,10 @@ def read_cat_breeds(db: Session = Depends(get_db)):
          description="При запросе выводится список всех "
                      "котят, содержащихся в базе данных")
 def read_cats(db: Session = Depends(get_db)):
-    db_products = crud.get_cats(db)
-    if db_products is None:
+    db_cats = crud.get_cats(db)
+    if db_cats is None:
         raise HTTPException(status_code=404, detail="Products not found")
-    return db_products
+    return db_cats
 
 
 @app.get("/cats/breeds/{breed_id}", response_model=list[shemas.CatBase],
@@ -46,10 +46,10 @@ def read_cats(db: Session = Depends(get_db)):
          description="При запросе выводится список всех "
                      "котят, содержащихся в базе данных")
 def read_cats(breed_id: int, db: Session = Depends(get_db)):
-    db_products = crud.get_cats_breeds(db=db, breed_id=breed_id)
-    if db_products is None:
+    db_cats = crud.get_cats_breeds(db=db, breed_id=breed_id)
+    if db_cats is None:
         raise HTTPException(status_code=404, detail="Products not found")
-    return db_products
+    return db_cats
 
 
 @app.post("/cat", response_model=shemas.Cat,
@@ -90,10 +90,10 @@ def create_cat_breed(cat_breed: shemas.CatBreedCreate,
          summary="Получение данных по котёнку",
          description="При отправке запросе выводится характеристики запрашиваемого котёнка")
 def read_cat(id: int, db: Session = Depends(get_db)):
-    db_product = crud.get_cat_id(db=db, cat_id=id)
-    if db_product is None:
+    db_cats = crud.get_cat_id(db=db, cat_id=id)
+    if db_cats is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return db_product
+    return db_cats
 
 
 if __name__ == "__main__":

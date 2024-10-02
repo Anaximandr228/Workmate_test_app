@@ -6,7 +6,7 @@ from sqlalchemy.sql import func
 Base = declarative_base()
 
 
-# Определение полей таблицы Product_type
+# Определение полей таблицы cat_breed
 class CatBreed(Base):
     __tablename__ = "cat_breed"
 
@@ -18,7 +18,7 @@ class CatBreed(Base):
     cat = relationship("Cat", back_populates="breed")
 
 
-# Определение полей таблицы Product
+# Определение полей таблицы cat
 class Cat(Base):
     __tablename__ = "cat"
 

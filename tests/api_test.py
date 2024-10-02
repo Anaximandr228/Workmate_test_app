@@ -91,7 +91,7 @@ def test_get_cat_id(client, products_setup):
     assert response.json()[0]['age'] == '3 месяца'
 
 
-def test_post_cat(client, products_setup, db_session):
+def test_post_cat_breed(client, products_setup, db_session):
     print('test_post_cat')
     data = {
         "breed": "Сфинкс"
@@ -136,6 +136,7 @@ def test_post_update_cat(client, products_setup, db_session):
     assert response.status_code == 200
     assert response.json()['weight'] == 1.242
     assert saved_product[0].weight == 1.242
+
 
 def test_get_delete_cat(client, products_setup):
     print('test_get_delete_cat')
