@@ -29,12 +29,19 @@ def get_cat_id(db: Session, cat_id: int) -> models.Cat:
     return db_product
 
 
-# Добавление нового товара
+# Добавление данных о котёнке
 def add_cat(db: Session, cat: shemas.CatCreate) -> models.Cat:
     db_product = models.Cat(**cat.dict())
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+    return db_product
+
+def update_cat(db: Session,cat_id: int, cat: shemas.CatCreate) -> models.Cat:
+    db_product = db.query(models.Cat).filter_by(id=cat_id)
+    db_product.update(cat.dict(), synchronize_session='fetch')
+    db.commit()
+    db_product = db.query(models.Cat).filter(models.Cat.id == cat_id).all()
     return db_product
 
 
@@ -44,21 +51,4 @@ def add_cat_breed(db: Session, cat_breed: shemas.CatBreedCreate) -> models.CatBr
     db.commit()
     db.refresh(db_product)
     return db_product
-#
-# # Добавление нового типа продукта
-# def add_product_type(db: Session,
-#                      product_type: shemas.ProductTypeCreate) \
-#         -> models.ProductType:
-#     db_product_type = models.ProductType(**product_type.dict())
-#     db.add(db_product_type)
-#     db.commit()
-#     db.refresh(db_product_type)
-#     return db_product_type
-#
-#
-# # Получение всех товаров по типу
-# def get_products_type(db: Session,
-#                       type_id: int) -> models.Product:
-#     result = db.query(models.Product).\
-#         filter(models.Product.product_type_id == type_id).all()
-#     return result
+

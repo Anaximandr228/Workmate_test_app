@@ -56,6 +56,13 @@ def create_cat(cat: shemas.CatCreate,
 def clear_cat(id: int, db: Session = Depends(get_db)):
     return crud.delete_cat(db=db, cat_id=id)
 
+@app.post("/cat/update/{id}", response_model=list[shemas.Cat],
+          summary="Удаление информации о котёнка",
+          description="При отправке запросе в "
+                      "базу данных удаляется информация о котёнке")
+def change_cat(id: int, cat: shemas.CatCreate, db: Session = Depends(get_db)):
+    return crud.update_cat(db=db, cat_id=id, cat=cat)
+
 @app.post("/cat_breed", response_model=shemas.CatBreed,
           summary="Добавление породы котят",
           description="При отправке запросе в "
