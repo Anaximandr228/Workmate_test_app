@@ -14,6 +14,10 @@ def get_breeds(db: Session) -> list[models.CatBreed]:
     return result
 
 
+def get_cats_breeds(db: Session, breed_id: int) -> list[models.Cat]:
+    result = db.query(models.Cat).filter(models.Cat.cat_breed_id == breed_id).all()
+    return result
+
 # Получение товара по id
 def delete_cat(db: Session, cat_id: int):
     db_product = \

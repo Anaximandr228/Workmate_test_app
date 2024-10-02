@@ -40,6 +40,16 @@ def read_cats(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Products not found")
     return db_products
 
+@app.get("/cats/breeds/{breed_id}", response_model=list[shemas.CatBase],
+         summary="Получение списка всех котят по породе",
+         description="При запросе выводится список всех "
+                     "котят, содержащихся в базе данных")
+def read_cats(breed_id: int,db: Session = Depends(get_db)):
+    db_products = crud.get_cats_breeds(db=db, breed_id=breed_id)
+    if db_products is None:
+        raise HTTPException(status_code=404, detail="Products not found")
+    return db_products
+
 
 @app.post("/cat", response_model=shemas.Cat,
           summary="Добавление котёнка",
