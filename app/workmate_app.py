@@ -40,11 +40,12 @@ def read_cats(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Products not found")
     return db_products
 
+
 @app.get("/cats/breeds/{breed_id}", response_model=list[shemas.CatBase],
          summary="Получение списка всех котят по породе",
          description="При запросе выводится список всех "
                      "котят, содержащихся в базе данных")
-def read_cats(breed_id: int,db: Session = Depends(get_db)):
+def read_cats(breed_id: int, db: Session = Depends(get_db)):
     db_products = crud.get_cats_breeds(db=db, breed_id=breed_id)
     if db_products is None:
         raise HTTPException(status_code=404, detail="Products not found")
@@ -59,26 +60,29 @@ def create_cat(cat: shemas.CatCreate,
                db: Session = Depends(get_db)):
     return crud.add_cat(db=db, cat=cat)
 
+
 @app.get("/cat/{id}",
-          summary="Удаление информации о котёнка",
-          description="При отправке запросе в "
-                      "базу данных удаляется информация о котёнке")
+         summary="Удаление информации о котёнка",
+         description="При отправке запросе в "
+                     "базу данных удаляется информация о котёнке")
 def clear_cat(id: int, db: Session = Depends(get_db)):
     return crud.delete_cat(db=db, cat_id=id)
 
+
 @app.post("/cat/update/{id}", response_model=list[shemas.Cat],
-          summary="Удаление информации о котёнка",
+          summary="Изменение информации о котёнка",
           description="При отправке запросе в "
-                      "базу данных удаляется информация о котёнке")
+                      "базу данных изменяется информация о котёнке")
 def change_cat(id: int, cat: shemas.CatCreate, db: Session = Depends(get_db)):
     return crud.update_cat(db=db, cat_id=id, cat=cat)
 
-@app.post("/cat_breed", response_model=shemas.CatBreed,
+
+@app.post("/breed", response_model=shemas.CatBreed,
           summary="Добавление породы котят",
           description="При отправке запросе в "
                       "базу данных добавляется новая порода котят")
 def create_cat_breed(cat_breed: shemas.CatBreedCreate,
-               db: Session = Depends(get_db)):
+                     db: Session = Depends(get_db)):
     return crud.add_cat_breed(db=db, cat_breed=cat_breed)
 
 
@@ -90,17 +94,6 @@ def read_cat(id: int, db: Session = Depends(get_db)):
     if db_product is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_product
-
-
-# @app.get("/products/type/{type_id}", response_model=list[shemas.Product],
-#          summary="Получение продуктов по типу",
-#          description="При отправке запросе выводятся "
-#                      "продукты по запрашиваемому типу")
-# def read_products_type(type_id: int, db: Session = Depends(get_db)):
-#     db_products_type = crud.get_products_type(db=db, type_id=type_id)
-#     if db_products_type is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return db_products_type
 
 
 if __name__ == "__main__":
