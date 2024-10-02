@@ -1,10 +1,10 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
-from app import models
-from app import shemas
+import models
+import shemas
 from sqlalchemy.orm import Session
-from app import crud
-from app.database import engine, SessionLocal
+import crud
+from database import engine, SessionLocal
 
 models.Base.metadata.create_all(bind=engine)
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app import models
-from app import shemas
+import models
+import shemas
 
 
 # Получение всех товаров
