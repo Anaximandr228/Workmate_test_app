@@ -55,7 +55,7 @@ def client(db_session) -> Generator:
 
 @pytest.fixture()
 def products_setup(db_session):
-    db_product = models.Product(breed='Бирманская кошка')
+    db_product = models.CatBreed(breed='Бирманская кошка')
     db_session.add(db_product)
     db_session.commit()
     db_type = models.Cat(name='Барсик', age='3 месяца', weight=0.45, color='Белый', cat_breed_id=1)
@@ -71,41 +71,74 @@ def test_get_cats_list(client, products_setup):
 
 
 def test_get_breeds_list(client, products_setup):
-    print('test_get_products_id')
+    print('test_get_breeds_list')
     response = client.get("/breeds")
     assert response.status_code == 200
-    assert response.json()[0]['breeds'] == 'Бирманская кошка'
+    assert response.json()[0]['breed'] == 'Бирманская кошка'
 
 
-def test_get_products_type(client, products_setup):
-    print('test_get_products_type')
-    response = client.get("/products/type/1")
+def test_get_breeds_cats(client, products_setup):
+    print('test_get_breeds_cats')
+    response = client.get("/cats/breeds/1")
     assert response.status_code == 200
-    assert response.json()[0]['name'] == 'Test'
+    assert response.json()[0]['name'] == 'Барсик'
 
 
-def test_post_product(client, products_setup, db_session):
+def test_get_cat_id(client, products_setup):
+    print('test_get_cat_id')
+    response = client.get("/cats/1")
+    assert response.status_code == 200
+    assert response.json()[0]['age'] == '3 месяца'
+
+
+def test_post_cat(client, products_setup, db_session):
+    print('test_post_cat')
+    data = {
+        "breed": "Сфинкс"
+    }
+    response = client.post("/breed", data=json.dumps(data))
+    saved_product = db_session.query(models.CatBreed). \
+        filter(models.CatBreed.id == response.json()["id"]).all()
+    assert response.status_code == 200
+    assert response.json()['breed'] == 'Сфинкс'
+    assert saved_product[0].breed == 'Сфинкс'
+
+
+def test_post_cat(client, products_setup, db_session):
     print('test_post_products')
     data = {
-        "name": "Test",
-        "product_type_id": 1
+        "name": "Пушок",
+        "age": "6 месяцев",
+        "weight": 0.872,
+        "color": "Рыжий",
+        "cat_breed_id": 1
     }
-    response = client.post("/products", data=json.dumps(data))
-    saved_product = db_session.query(models.Product). \
-        filter(models.Product.id == response.json()['id']).all()
+    response = client.post("/cat", data=json.dumps(data))
+    saved_product = db_session.query(models.Cat). \
+        filter(models.Cat.id == response.json()["id"]).all()
     assert response.status_code == 200
-    assert response.json()['name'] == 'Test'
-    assert saved_product[0].name == 'Test'
+    assert response.json()['name'] == 'Пушок'
+    assert saved_product[0].name == 'Пушок'
 
 
-def test_post_product_type(client, products_setup, db_session):
+def test_post_update_cat(client, products_setup, db_session):
     print('test_post_products')
     data = {
-        "name": "test_type"
+        "name": "Пушок",
+        "age": "8 месяцев",
+        "weight": 1.242,
+        "color": "Рыжий",
+        "cat_breed_id": 1
     }
-    response = client.post("/type", data=json.dumps(data))
-    saved_product_type = db_session.query(models.ProductType). \
-        filter(models.ProductType.id == response.json()['id'])
+    response = client.post("/cat", data=json.dumps(data))
+    saved_product = db_session.query(models.Cat). \
+        filter(models.Cat.id == response.json()["id"]).all()
     assert response.status_code == 200
-    assert response.json()['name'] == 'test_type'
-    assert saved_product_type[0].name == 'test_type'
+    assert response.json()['weight'] == 1.242
+    assert saved_product[0].weight == 1.242
+
+def test_get_delete_cat(client, products_setup):
+    print('test_get_delete_cat')
+    response = client.get("/cat/1")
+    assert response.status_code == 200
+    assert response.json()['message'] == 'Данные были удалены'
