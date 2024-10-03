@@ -54,44 +54,44 @@ def client(db_session) -> Generator:
 
 
 @pytest.fixture()
-def products_setup(db_session):
-    db_product = models.CatBreed(breed='Бирманская кошка')
-    db_session.add(db_product)
+def cats_setup(db_session):
+    db_cat = models.CatBreed(breed='Бирманская кошка')
+    db_session.add(db_cat)
     db_session.commit()
-    db_type = models.Cat(name='Барсик', age='3 месяца', weight=0.45, color='Белый', cat_breed_id=1)
-    db_session.add(db_type)
+    db_breed = models.Cat(name='Барсик', age='3 месяца', weight=0.45, color='Белый', cat_breed_id=1)
+    db_session.add(db_breed)
     db_session.commit()
 
 
-def test_get_cats_list(client, products_setup):
+def test_get_cats_list(client, cats_setup):
     print('test_get_cats_list')
     response = client.get("/cats")
     assert response.status_code == 200
     assert response.json()[0]['name'] == 'Барсик'
 
 
-def test_get_breeds_list(client, products_setup):
+def test_get_breeds_list(client, cats_setup):
     print('test_get_breeds_list')
     response = client.get("/breeds")
     assert response.status_code == 200
     assert response.json()[0]['breed'] == 'Бирманская кошка'
 
 
-def test_get_breeds_cats(client, products_setup):
+def test_get_breeds_cats(client, cats_setup):
     print('test_get_breeds_cats')
     response = client.get("/cats/breeds/1")
     assert response.status_code == 200
     assert response.json()[0]['name'] == 'Барсик'
 
 
-def test_get_cat_id(client, products_setup):
+def test_get_cat_id(client, cats_setup):
     print('test_get_cat_id')
     response = client.get("/cats/1")
     assert response.status_code == 200
     assert response.json()[0]['age'] == '3 месяца'
 
 
-def test_post_cat_breed(client, products_setup, db_session):
+def test_post_cat_breed(client, cats_setup, db_session):
     print('test_post_cat')
     data = {
         "breed": "Сфинкс"
@@ -104,7 +104,7 @@ def test_post_cat_breed(client, products_setup, db_session):
     assert saved_product[0].breed == 'Сфинкс'
 
 
-def test_post_cat(client, products_setup, db_session):
+def test_post_cat(client, cats_setup, db_session):
     print('test_post_products')
     data = {
         "name": "Пушок",
@@ -121,7 +121,7 @@ def test_post_cat(client, products_setup, db_session):
     assert saved_product[0].name == 'Пушок'
 
 
-def test_post_update_cat(client, products_setup, db_session):
+def test_post_update_cat(client, cats_setup, db_session):
     print('test_post_products')
     data = {
         "name": "Пушок",
@@ -138,7 +138,7 @@ def test_post_update_cat(client, products_setup, db_session):
     assert saved_product[0].weight == 1.242
 
 
-def test_get_delete_cat(client, products_setup):
+def test_get_delete_cat(client, cats_setup):
     print('test_get_delete_cat')
     response = client.get("/cat/1")
     assert response.status_code == 200
