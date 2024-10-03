@@ -26,7 +26,7 @@ class Cat(Base):
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
     name = Column(String(100), nullable=False)
-    age = Column(String(100), nullable=False)
+    age = Column(Integer, nullable=False)
     weight = Column(Float, nullable=False)
     color = Column(String(100), nullable=False)
     cat_breed_id = Column(Integer, ForeignKey("cat_breed.id"))
