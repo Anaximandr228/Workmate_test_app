@@ -42,7 +42,7 @@ async def read_cats(db: Session = Depends(get_db)):
 
 
 @app.get("/cats/breeds/{breed_id}", response_model=list[shemas.CatBase],
-         summary="Получение списка всех котят по породе",
+         summary="Получение списка всех котят определенной породы",
          description="При запросе выводится список всех "
                      "котят, содержащихся в базе данных")
 async def read_cats(breed_id: int, db: Session = Depends(get_db)):
